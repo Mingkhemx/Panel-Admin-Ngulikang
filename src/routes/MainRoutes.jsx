@@ -27,11 +27,17 @@ const Marketplace = Loadable(lazy(() => import('pages/marketplace/Marketplace'))
 // render - finance pages
 const GajiPage = Loadable(lazy(() => import('pages/finance/Gaji')));
 
+import AuthGuard from 'utils/route-guard/AuthGuard';
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
   path: '/',
-  element: <DashboardLayout />,
+  element: (
+    <AuthGuard>
+      <DashboardLayout />
+    </AuthGuard>
+  ),
   children: [
     {
       path: '/',

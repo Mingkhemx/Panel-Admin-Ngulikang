@@ -56,9 +56,25 @@ export default function AuthLogin({ isDemo = false }) {
             .test('no-leading-trailing-whitespace', 'Password cannot start or end with spaces', (value) => value === value.trim())
             .max(10, 'Password must be less than 10 characters')
         })}
+        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+          try {
+            // Simulate API call
+            setTimeout(() => {
+              localStorage.setItem('token', 'dummy-token-ngulikang');
+              setStatus({ success: true });
+              setSubmitting(false);
+              window.location.href = '/dashboard/default';
+            }, 1000);
+
+          } catch (err) {
+            setStatus({ success: false });
+            setErrors({ submit: err.message });
+            setSubmitting(false);
+          }
+        }}
       >
-        {({ errors, handleBlur, handleChange, touched, values }) => (
-          <form noValidate>
+        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+          <form noValidate onSubmit={handleSubmit}>
             <Grid container spacing={3}>
               <Grid size={12}>
                 <Stack sx={{ gap: 1 }}>
@@ -132,9 +148,14 @@ export default function AuthLogin({ isDemo = false }) {
 
                 </Stack>
               </Grid>
+              {errors.submit && (
+                <Grid size={12}>
+                  <FormHelperText error>{errors.submit}</FormHelperText>
+                </Grid>
+              )}
               <Grid size={12}>
                 <AnimateButton>
-                  <Button fullWidth size="large" variant="contained" color="primary">
+                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
                     Login
                   </Button>
                 </AnimateButton>
